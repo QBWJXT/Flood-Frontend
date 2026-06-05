@@ -9,33 +9,79 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
+        /* === 全局与自定义滚动条 === */
+        :root {
+            --cyan: #00eaff;
+            --blue: #005a9e;
+            --dark-blue: #020d1e;
+            --green: #00ffaa;
+            --red: #ff4757;
+            --yellow: #ffa502;
+            --bg-color: #010a15;
+            --text-main: #e0f2fe;
+            --text-muted: #7dd3fc;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 234, 255, 0.05);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 90, 158, 0.8);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyan);
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #010a15;
-            background-image: radial-gradient(#005a9e 1px, transparent 1px);
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(0, 234, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 234, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
-            color: #fff;
-            font-family: 'Microsoft YaHei', sans-serif;
+            background-position: center center;
+            color: var(--text-main);
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             overflow: hidden;
         }
 
+        /* === 顶部导航栏 === */
         .header {
             text-align: center;
-            padding: 15px 0;
-            background: linear-gradient(to bottom, rgba(7, 26, 56, 0.9), rgba(2, 13, 30, 0.8));
-            border-bottom: 2px solid #00eaff;
-            box-shadow: 0 0 25px rgba(0, 234, 255, 0.3);
+            padding: 18px 0;
+            background: linear-gradient(180deg, rgba(2, 13, 30, 0.95) 0%, rgba(2, 13, 30, 0.4) 100%);
+            border-bottom: 1px solid rgba(0, 234, 255, 0.2);
             position: relative;
+            backdrop-filter: blur(10px);
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            box-shadow: 0 0 15px var(--cyan);
         }
         .header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 28px;
             color: #ffffff;
-            text-shadow: 0 0 15px #00eaff, 0 0 5px #00eaff;
-            letter-spacing: 4px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.5);
+            letter-spacing: 3px;
         }
 
+        /* === 主体布局 === */
         .container {
             display: flex;
             padding: 20px;
@@ -62,48 +108,65 @@
             gap: 20px;
         }
 
+        /* === 科技感卡片 === */
         .card {
-            background: rgba(4, 18, 41, 0.85);
-            border: 1px solid #005a9e;
-            border-radius: 4px;
+            background: rgba(4, 18, 41, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 90, 158, 0.5);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: inset 0 0 20px rgba(0, 153, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 153, 255, 0.05);
             position: relative;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: rgba(0, 234, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(0, 234, 255, 0.05);
+        }
+        /* 卡片四角科技修饰 */
+        .card::before, .card::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            transition: all 0.3s ease;
         }
         .card::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            width: 15px;
-            height: 15px;
-            border-top: 3px solid #00eaff;
-            border-left: 3px solid #00eaff;
+            top: -1px; left: -1px;
+            border-top: 2px solid var(--cyan);
+            border-left: 2px solid var(--cyan);
+            border-top-left-radius: 8px;
         }
         .card::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            right: -1px;
-            width: 15px;
-            height: 15px;
-            border-bottom: 3px solid #00eaff;
-            border-right: 3px solid #00eaff;
+            bottom: -1px; right: -1px;
+            border-bottom: 2px solid var(--cyan);
+            border-right: 2px solid var(--cyan);
+            border-bottom-right-radius: 8px;
         }
 
         .card h3 {
             margin-top: 0;
-            color: #00eaff;
-            font-size: 18px;
-            border-bottom: 1px solid rgba(0, 234, 255, 0.3);
-            padding-bottom: 10px;
+            color: var(--cyan);
+            font-size: 16px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0, 234, 255, 0.15);
+            padding-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+        .card h3::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--cyan);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--cyan);
         }
 
         #chart {
@@ -112,78 +175,172 @@
             min-height: 200px;
         }
 
+        /* === 3D 容器与孪生信息 === */
         #three-container {
             flex: 1;
             width: 100%;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            background: radial-gradient(circle at center, rgba(0, 90, 158, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(0, 90, 158, 0.15) 0%, rgba(1, 10, 21, 0.8) 100%);
             border: 1px solid rgba(0, 234, 255, 0.2);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
-        .twin-overlay {
+        #three-container::after {
+            content: '';
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 0; left: 0; right: 0; bottom: 0;
+            box-shadow: inset 0 0 20px rgba(0, 234, 255, 0.1);
             pointer-events: none;
-        }
-        .twin-title {
-            font-size: 24px;
-            color: #00eaff;
-            font-weight: bold;
-            text-shadow: 0 0 10px #00eaff;
-        }
-        .twin-value {
-            font-size: 48px;
-            color: #00ffaa;
-            font-weight: bold;
-            text-shadow: 0 0 15px #00ffaa;
-            margin-top: 5px;
+            border-radius: 12px;
         }
 
+        .twin-overlay {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .twin-title {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .twin-value {
+            font-size: 52px;
+            color: var(--green);
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+            margin-top: 5px;
+            line-height: 1;
+        }
+
+        /* === 数据条目展示 === */
         .data-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
-            font-size: 16px;
-            color: #b3d4ff;
-            background: rgba(0, 90, 158, 0.2);
-            padding: 12px 15px;
-            border-radius: 4px;
-            border-left: 4px solid #005a9e;
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: var(--text-main);
+            background: linear-gradient(90deg, rgba(0, 90, 158, 0.2) 0%, transparent 100%);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid var(--blue);
+            transition: transform 0.2s;
+        }
+        .data-item:hover {
+            transform: translateX(5px);
+            background: linear-gradient(90deg, rgba(0, 90, 158, 0.3) 0%, transparent 100%);
         }
         .data-value {
             font-weight: bold;
-            font-size: 22px;
-            font-family: monospace;
+            font-size: 20px;
+            font-family: 'Courier New', Courier, monospace;
         }
         .status-on {
-            color: #ff3333;
-            text-shadow: 0 0 10px #ff3333;
-            border-left-color: #ff3333;
+            border-left-color: var(--red);
+        }
+        .status-on .data-value {
+            color: var(--red);
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
         }
         .status-off {
-            color: #00ffaa;
-            text-shadow: 0 0 10px #00ffaa;
-            border-left-color: #00ffaa;
+            border-left-color: var(--green);
+        }
+        .status-off .data-value {
+            color: var(--green);
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
         }
         .status-warn {
-            color: #ffcc00;
-            text-shadow: 0 0 10px #ffcc00;
-            border-left-color: #ffcc00;
+            border-left-color: var(--yellow);
+        }
+        .status-warn .data-value {
+            color: var(--yellow);
+            text-shadow: 0 0 10px rgba(255, 165, 2, 0.4);
         }
 
-        .btn-sm { background: rgba(0, 90, 158, 0.5); color: #fff; border: 1px solid #00eaff; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; margin-left: 10px; font-weight: bold;}
-        .btn-sm:hover { background: #005a9e; box-shadow: 0 0 10px #00eaff; transform: translateY(-1px); }
-        
-        /* === 优化一：表头粘性定位（解决滚动时表头消失问题）=== */
+        /* === 按钮样式 === */
+        .btn-sm { 
+            background: rgba(0, 234, 255, 0.1); 
+            color: var(--cyan); 
+            border: 1px solid rgba(0, 234, 255, 0.4); 
+            border-radius: 4px; 
+            padding: 6px 14px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            margin-left: 10px; 
+            font-size: 13px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+        .btn-sm:hover:not(:disabled) { 
+            background: rgba(0, 234, 255, 0.2); 
+            box-shadow: 0 0 15px rgba(0, 234, 255, 0.3); 
+            transform: translateY(-2px); 
+        }
+        .btn-sm:disabled {
+            border-color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            background: transparent;
+        }
+
+        .header-btn {
+            position: absolute; 
+            right: 30px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            padding: 10px 20px; 
+            cursor: pointer;
+            background: rgba(0, 90, 158, 0.3); 
+            color: var(--cyan); 
+            border: 1px solid var(--cyan); 
+            border-radius: 6px; 
+            z-index: 100;
+            font-size: 14px; 
+            font-weight: bold; 
+            backdrop-filter: blur(5px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .header-btn:hover {
+            background: rgba(0, 234, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 234, 255, 0.4), inset 0 0 10px rgba(0, 234, 255, 0.2);
+            color: #fff;
+        }
+
+        /* === 表格样式 === */
+        table {
+            width: 100%; 
+            color: var(--text-main); 
+            border-collapse: separate; 
+            border-spacing: 0;
+            text-align: center;
+        }
         th {
             position: sticky;
             top: 0;
-            background-color: #005a9e;    /* 不透明背景遮挡下方滚动数据 */
+            background: rgba(2, 18, 43, 0.95); 
+            backdrop-filter: blur(10px);
             z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            color: var(--cyan);
+            font-weight: 600;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(0, 234, 255, 0.3);
+            font-size: 14px;
         }
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(0, 90, 158, 0.3);
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        tbody tr:hover td {
+            background: rgba(0, 234, 255, 0.05);
+        }
+        
     </style>
 </head>
 <body>
@@ -191,23 +348,15 @@
         <div class="header">
             <h1>地下空间边缘防汛决策监控大屏 (云边协同)</h1>
             
-            <button @click="isHistoryView = !isHistoryView" 
-                    style="position: absolute; right: 30px; top: 15px; padding: 12px 25px; cursor:pointer;
-                           background: linear-gradient(135deg, #005a9e, #002244); color: #fff; 
-                           border: 1px solid #00eaff; border-radius: 8px; z-index:100;
-                           font-size: 16px; font-weight: bold; font-family: 'Microsoft YaHei';
-                           box-shadow: 0 0 15px rgba(0, 234, 255, 0.4); transition: all 0.3s;"
-                    onmouseover="this.style.boxShadow='0 0 25px rgba(0, 234, 255, 0.8)'; this.style.transform='scale(1.05)';"
-                    onmouseout="this.style.boxShadow='0 0 15px rgba(0, 234, 255, 0.4)'; this.style.transform='scale(1)';">
+            <button class="header-btn" @click="isHistoryView = !isHistoryView">
                 {{ isHistoryView ? '🔙 返回数字孪生大屏' : '📊 历史运行记录 (点击查看)' }}
             </button>
         </div>
 
-        <!-- 监控大屏视图 -->
         <div v-if="!isHistoryView" class="container">
             <div class="left-panel">
                 <div class="card" style="flex: 1;">
-                    <h3>📈 实时水位监测与滤波抗扰分析</h3>
+                    <h3 style="border-bottom: none;">📈 实时水位监测与滤波抗扰分析</h3>
                     <div id="chart"></div>
                 </div>
             </div>
@@ -216,18 +365,19 @@
                 <div id="three-container"></div>
                 <div class="twin-overlay">
                     <div class="twin-title">3D 数字孪生模型 (FKF映射)</div>
-                    <div class="twin-value">{{ sensorData.FKF_Water }} <span style="font-size:20px; color:#fff">mm</span></div>
+                    <div class="twin-value">{{ sensorData.FKF_Water }} <span style="font-size:24px; color:var(--text-muted)">mm</span></div>
                     
                     <div :style="{ 
-                        marginTop: '20px', 
-                        padding: '10px 15px', 
-                        borderRadius: '4px', 
-                        backgroundColor: isWarning ? 'rgba(255, 51, 51, 0.2)' : 'rgba(0, 255, 170, 0.1)',
-                        border: isWarning ? '1px solid #ff3333' : '1px solid #00ffaa',
-                        color: isWarning ? '#ff3333' : '#00ffaa',
-                        fontWeight: 'bold',
-                        fontSize: '16px',
-                        textShadow: isWarning ? '0 0 10px #ff3333' : 'none'
+                        marginTop: '25px', 
+                        padding: '12px 18px', 
+                        borderRadius: '6px', 
+                        backgroundColor: isWarning ? 'rgba(255, 71, 87, 0.15)' : 'rgba(0, 255, 170, 0.1)',
+                        border: isWarning ? '1px solid var(--red)' : '1px solid rgba(0, 255, 170, 0.3)',
+                        color: isWarning ? 'var(--red)' : 'var(--green)',
+                        fontWeight: '600',
+                        fontSize: '15px',
+                        backdropFilter: 'blur(4px)',
+                        boxShadow: isWarning ? '0 0 15px rgba(255, 71, 87, 0.2)' : 'none'
                     }">
                         云端态势感知：{{ predictMsg }}
                     </div>
@@ -237,9 +387,9 @@
             <div class="right-panel">
                 <div class="card">
                     <h3>⚡ 边缘算力监控</h3>
-                    <div class="data-item"><span>FKF算法单次耗时:</span> <span class="data-value" style="color:#00eaff">{{ sensorData.Calc_Time_us }} µs</span></div>
-                    <div class="data-item"><span>自适应模糊系数 (R_Adj):</span> <span class="data-value" style="color:#ffcc00">{{ sensorData.R_Adj_Coeff }}</span></div>
-                    <div style="font-size: 12px; color: #888; text-align: right;">注：参数随水流非线性突变自动调节</div>
+                    <div class="data-item"><span>FKF算法单次耗时:</span> <span class="data-value" style="color:var(--cyan)">{{ sensorData.Calc_Time_us }} µs</span></div>
+                    <div class="data-item"><span>自适应模糊系数 (R_Adj):</span> <span class="data-value" style="color:var(--yellow)">{{ sensorData.R_Adj_Coeff }}</span></div>
+                    <div style="font-size: 12px; color: var(--text-muted); text-align: right; margin-top: 5px;">注：参数随水流非线性突变自动调节</div>
                 </div>
 
                 <div class="card">
@@ -254,91 +404,95 @@
                     </div>
                 </div>
 
-                <div class="card" style="flex: 1; justify-content: center; text-align: center;">
-                    <h3 style="justify-content: center;">🔗 链路状态</h3>
-                    <div :style="{ color: isConnected ? '#00ffaa' : '#ff3333', fontSize: '18px', fontWeight: 'bold', marginBottom: '15px' }">
-                        {{ isConnected ? '🟢 云端服务: 连接稳定' : '🔴 云端服务: 失去连接' }}
+                <div class="card" style="flex: 1; justify-content: center; text-align: center; background: rgba(4, 18, 41, 0.4);">
+                    <h3 style="justify-content: center; border:none; margin-bottom: 25px;">🔗 链路状态</h3>
+                    <div :style="{ color: isConnected ? 'var(--green)' : 'var(--red)', fontSize: '16px', fontWeight: 'bold', marginBottom: '20px', letterSpacing: '1px' }">
+                        <span style="display:inline-block; margin-right:8px; text-shadow:0 0 8px currentColor;">{{ isConnected ? '🟢' : '🔴' }}</span>
+                        云端服务: {{ isConnected ? '连接稳定' : '失去连接' }}
                     </div>
-                    <div :style="{ color: isStm32Connected ? '#00ffaa' : '#ffcc00', fontSize: '18px', fontWeight: 'bold' }">
-                        {{ isStm32Connected ? '🚀 边缘节点 (STM32): 活跃' : '⚠️ 边缘节点 (STM32): 离线' }}
+                    <div :style="{ color: isStm32Connected ? 'var(--green)' : 'var(--yellow)', fontSize: '16px', fontWeight: 'bold', letterSpacing: '1px' }">
+                        <span style="display:inline-block; margin-right:8px; text-shadow:0 0 8px currentColor;">{{ isStm32Connected ? '🚀' : '⚠️' }}</span>
+                        边缘节点 (STM32): {{ isStm32Connected ? '活跃' : '离线' }}
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 历史数据视图 (支持批次列表/详情/实时记录) -->
-        <div v-if="isHistoryView" class="card" style="margin:20px; height:calc(100vh - 130px); overflow-y:auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0, 234, 255, 0.3); padding-bottom: 15px; margin-bottom: 15px;">
-                <h3 style="border:none; margin:0; padding:0; display:flex; align-items:center; gap:10px;">
-                    <span v-if="historyMode === 'live'">📊 历史运行记录 | 系统总运行时间: {{ runDuration }}</span>
-                    <span v-if="historyMode === 'runs'">🗂️ 以往运行批次列表 (智能识别断电重启)</span>
-                    <!-- 优化二：动态显示第几次运行的详细数据 -->
-                    <span v-if="historyMode === 'detail'">🔍 第 {{ detailPagination.sessionId }} 次运行的详细数据记录</span>
+        <div v-if="isHistoryView" class="card" style="margin:20px; height:calc(100vh - 130px); overflow-y:auto; padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0, 234, 255, 0.2); padding-bottom: 15px; margin-bottom: 20px;">
+                <h3 style="border:none; margin:0; padding:0; display:flex; align-items:center; gap:10px; font-size:18px;">
+                    <span v-if="historyMode === 'live'" style="color:var(--text-main)"><span style="color:var(--cyan)">📊 历史运行记录</span> | 系统总运行时间: <span style="font-family:monospace; color:var(--yellow)">{{ runDuration }}</span></span>
+                    <span v-if="historyMode === 'runs'">🗂️ 以往运行批次列表 <span style="font-size:13px; color:var(--text-muted); font-weight:normal;">(智能识别断电重启)</span></span>
+                    <span v-if="historyMode === 'detail'">🔍 第 <span style="color:var(--cyan); font-size:22px;">{{ detailPagination.sessionId }}</span> 次运行的详细数据记录</span>
                 </h3>
                 
-                <div>
+                <div style="display: flex; gap: 10px;">
                     <button v-if="historyMode !== 'live'" @click="backToLiveHistory" class="btn-sm">📡 恢复实时动态记录</button>
                     <button v-if="historyMode === 'live'" @click="fetchRunSessions" class="btn-sm">🗂️ 查看之前十次运行批次</button>
                     <button v-if="historyMode === 'detail'" @click="historyMode = 'runs'" class="btn-sm">🔙 返回批次列表</button>
                 </div>
             </div>
             
-            <!-- 实时历史模式 / 详情模式 的数据表格 (共用表格结构) -->
-            <table v-if="historyMode === 'live' || historyMode === 'detail'" style="width:100%; color:white; border-collapse:collapse; text-align:center;">
+            <table v-if="historyMode === 'live' || historyMode === 'detail'">
                 <thead>
-                    <tr style="background:#005a9e; height:40px;">
-                        <th>具体日期与时间</th><th>滤波水位(mm)</th><th>算法耗时(us)</th><th>水泵状态</th>
+                    <tr>
+                        <th>具体日期与时间</th><th>滤波水位 (mm)</th><th>算法耗时 (us)</th><th>水泵状态</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in (historyMode === 'live' ? historyData : currentRunDetail)" :key="item.id" 
-                        :style="{height:'40px', borderBottom:'1px solid #11294a'}">
-                        <td>{{ item.timestamp ? item.timestamp.split('.')[0].replace('T', ' ') : '' }}</td>
-                        <td>{{ item.fkf_water }}</td>
-                        <td>{{ item.calc_time_us }}</td>
-                        <td>{{ item.pump_status === 1 ? '运转' : '待机' }}</td>
+                    <tr v-for="item in (historyMode === 'live' ? historyData : currentRunDetail)" :key="item.id">
+                        <td style="color:var(--text-muted)">{{ item.timestamp ? item.timestamp.split('.')[0].replace('T', ' ') : '' }}</td>
+                        <td style="color:var(--cyan); font-weight:bold; font-family:monospace;">{{ item.fkf_water }}</td>
+                        <td style="color:var(--text-main); font-family:monospace;">{{ item.calc_time_us }}</td>
+                        <td>
+                            <span :style="{
+                                padding: '4px 10px', borderRadius: '12px', fontSize: '12px',
+                                background: item.pump_status === 1 ? 'rgba(255, 71, 87, 0.2)' : 'rgba(0, 255, 170, 0.1)',
+                                color: item.pump_status === 1 ? 'var(--red)' : 'var(--green)',
+                                border: item.pump_status === 1 ? '1px solid var(--red)' : '1px solid rgba(0, 255, 170, 0.3)'
+                            }">
+                                {{ item.pump_status === 1 ? '运转' : '待机' }}
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- 详情模式的分页组件 -->
-            <div v-if="historyMode === 'detail'" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; background: rgba(0, 90, 158, 0.2); border-radius: 4px; margin-top: 10px;">
-                <span style="color: #00eaff; font-weight: bold;">
-                    共检索到 {{ detailPagination.total }} 条数据 | 当前第 {{ detailPagination.page }} / {{ Math.ceil(detailPagination.total / detailPagination.pageSize) || 1 }} 页
+            <div v-if="historyMode === 'detail'" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(0, 90, 158, 0.1); border-radius: 6px; margin-top: 15px; border: 1px solid rgba(0, 90, 158, 0.3);">
+                <span style="color: var(--text-muted); font-size: 14px;">
+                    共检索到 <strong style="color:var(--cyan)">{{ detailPagination.total }}</strong> 条数据 | 当前第 <strong style="color:white">{{ detailPagination.page }}</strong> / {{ Math.ceil(detailPagination.total / detailPagination.pageSize) || 1 }} 页
                 </span>
-                <div>
+                <div style="display: flex; gap: 10px;">
                     <button @click="changePage(-1)" 
                             :disabled="detailPagination.page === 1" 
-                            class="btn-sm" 
-                            :style="{opacity: detailPagination.page === 1 ? 0.3 : 1, cursor: detailPagination.page === 1 ? 'not-allowed' : 'pointer'}">
-                        ⬅️ 上一页
+                            class="btn-sm">
+                        ⬅ 上一页
                     </button>
                     <button @click="changePage(1)" 
                             :disabled="detailPagination.page >= Math.ceil(detailPagination.total / detailPagination.pageSize)" 
-                            class="btn-sm" 
-                            :style="{opacity: detailPagination.page >= Math.ceil(detailPagination.total / detailPagination.pageSize) ? 0.3 : 1, cursor: detailPagination.page >= Math.ceil(detailPagination.total / detailPagination.pageSize) ? 'not-allowed' : 'pointer'}">
-                        下一页 ➡️
+                            class="btn-sm">
+                        下一页 ➡
                     </button>
                 </div>
             </div>
 
-            <!-- 批次列表模式 (显示所有运行会话) -->
-            <table v-if="historyMode === 'runs'" style="width:100%; color:white; border-collapse:collapse; text-align:center;">
+            <table v-if="historyMode === 'runs'">
                 <thead>
-                    <tr style="background:#005a9e; height:40px;">
+                    <tr>
                         <th>批次标识</th><th>开机时间</th><th>关机/断线时间</th><th>单次运行时长</th><th>数据量</th><th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="session in runSessions" :key="session.id" style="height:45px; border-bottom:1px solid #11294a; background:rgba(0, 90, 158, 0.1);">
-                        <td style="color:#00ffaa; font-weight:bold;">第 {{ session.id }} 次运行</td>
-                        <td>{{ session.start_time.split('.')[0].replace('T', ' ') }}</td>
-                        <td>{{ session.end_time.split('.')[0].replace('T', ' ') }}</td>
-                        <td style="color:#ffcc00;">{{ formatDuration(session.duration_seconds) }}</td>
-                        <td>{{ session.count }} 条</td>
+                    <tr v-for="session in runSessions" :key="session.id">
+                        <td style="color:var(--cyan); font-weight:bold;">第 {{ session.id }} 次运行</td>
+                        <td style="color:var(--text-muted)">{{ session.start_time.split('.')[0].replace('T', ' ') }}</td>
+                        <td style="color:var(--text-muted)">{{ session.end_time.split('.')[0].replace('T', ' ') }}</td>
+                        <td style="color:var(--yellow); font-family:monospace;">{{ formatDuration(session.duration_seconds) }}</td>
+                        <td style="font-family:monospace;">{{ session.count }} 条</td>
                         <td>
-                            <!-- 优化二：查看数据按钮传入session.id 实现动态上下文提示 -->
-                            <button @click="viewRunDetail(session.start_time, session.end_time, session.id)" class="btn-sm" style="background:#00eaff; color:#010a15; margin:0;">查看数据</button>
+                            <button @click="viewRunDetail(session.start_time, session.end_time, session.id)" class="btn-sm" style="background:rgba(0, 234, 255, 0.2); margin:0;">
+                                📊 查看数据
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -373,21 +527,19 @@
                 const runDuration = ref("0天0小时0分0秒");
 
                 // 运行批次（Sessions）相关状态
-                const historyMode = ref('live'); // 状态机：'live'实时记录, 'runs'批次列表, 'detail'详细数据
+                const historyMode = ref('live'); 
                 const runSessions = ref([]);
                 const currentRunDetail = ref([]);
 
-                // 优化二：详情页的分页状态管理器 + 新增 sessionId 字段记录当前是第几次运行
                 const detailPagination = ref({ 
                     page: 1, 
                     pageSize: 100, 
                     total: 0, 
                     startTime: '', 
                     endTime: '',
-                    sessionId: ''    // 用于标题显示第X次运行
+                    sessionId: ''  
                 });
 
-                // 格式化秒数为直观文本
                 const formatDuration = (totalSeconds) => {
                     if (totalSeconds < 1) return "< 1秒";
                     const d = Math.floor(totalSeconds / 86400);
@@ -402,24 +554,19 @@
                     return res;
                 };
 
-                // 请求批次列表 (所有运行会话)
                 const fetchRunSessions = async () => {
                     try {
                         const res = await fetch('https://flood-backend-kd0w.onrender.com/api/water/runs');
                         runSessions.value = await res.json();
                         historyMode.value = 'runs';
-                        // 暂停历史实时刷新，避免干扰批次浏览
                         if (historyPollingTimer) { clearInterval(historyPollingTimer); historyPollingTimer = null; }
                     } catch (e) { console.error(e); }
                 };
 
-                // 优化二：修改 viewRunDetail，接收 sessionId 参数，记录当前运行次数，方便标题和翻页时保留
                 const viewRunDetail = async (start, end, sessionId = undefined, page = 1) => {
                     try {
-                        // 记录当前查看的时间段，方便翻页时复用
                         detailPagination.value.startTime = start;
                         detailPagination.value.endTime = end;
-                        // 如果传入了 sessionId，则更新到状态中（用于标题显示“第X次运行”）
                         if (sessionId !== undefined) {
                             detailPagination.value.sessionId = sessionId;
                         }
@@ -435,12 +582,10 @@
                     } catch (e) { console.error(e); }
                 };
 
-                // 翻页操作函数 (保留 sessionId 上下文)
                 const changePage = (delta) => {
                     const newPage = detailPagination.value.page + delta;
                     const maxPage = Math.ceil(detailPagination.value.total / detailPagination.value.pageSize);
                     if (newPage > 0 && newPage <= maxPage) {
-                        // 翻页时传递已存储的 startTime, endTime 以及 sessionId
                         viewRunDetail(
                             detailPagination.value.startTime, 
                             detailPagination.value.endTime, 
@@ -450,22 +595,18 @@
                     }
                 };
 
-                // 返回实时历史模式（清空分页和细节，重新拉取实时历史记录）
                 const backToLiveHistory = () => {
                     historyMode.value = 'live';
                     fetchHistory();
-                    // 重新开始实时历史记录轮询
                     if (historyPollingTimer) clearInterval(historyPollingTimer);
                     historyPollingTimer = setInterval(fetchHistory, 2000);
                 };
 
-                // 轮询计时器
                 let pollingTimer = null;
                 let historyPollingTimer = null;
                 let durationTimer = null;
                 let systemStartTime = null;
 
-                // 实时更新运行时长（基于系统启动基准时间）
                 const updateDuration = () => {
                     if (!systemStartTime) return;
                     const now = new Date();
@@ -478,7 +619,6 @@
                     runDuration.value = `${days}天${hours}小时${minutes}分${seconds}秒`;
                 };
 
-                // 获取最近50条历史记录（实时模式下展示）
                 const fetchHistory = async () => {
                     try {
                         const res = await fetch('https://flood-backend-kd0w.onrender.com/api/water/history?limit=50');
@@ -489,10 +629,8 @@
                     }
                 };
 
-                // 监听历史视图切换，管理轮询与计时器
                 watch(isHistoryView, (newVal) => {
                     if (newVal) {
-                        // 切换到历史视图，停止大屏实时数据轮询，开启历史数据拉取
                         if (pollingTimer) {
                             clearInterval(pollingTimer);
                             pollingTimer = null;
@@ -500,10 +638,8 @@
                         historyMode.value = 'live';
                         fetchHistory();
                         historyPollingTimer = setInterval(fetchHistory, 2000);
-                        // 启动运行时长计时器
                         durationTimer = setInterval(updateDuration, 1000);
                     } else {
-                        // 切换回大屏孪生视图，停止历史相关轮询，恢复实时传感器数据轮询
                         if (historyPollingTimer) {
                             clearInterval(historyPollingTimer);
                             historyPollingTimer = null;
@@ -520,13 +656,11 @@
                     }
                 });
 
-                // ECharts 相关变量
                 let myChart = null;
                 const timeData = [];
                 const rawSeries = [];
                 const fkfSeries = [];
 
-                // Three.js 相关变量
                 let scene, camera, renderer, waterMesh;
                 const MAX_WATER_MM = 40.0;
 
@@ -539,19 +673,20 @@
                         backgroundColor: 'transparent',
                         tooltip: {
                             trigger: 'axis',
-                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            backgroundColor: 'rgba(2, 13, 30, 0.85)',
+                            borderColor: 'rgba(0, 234, 255, 0.3)',
                             textStyle: { color: '#fff' }
                         },
                         legend: {
                             data: ['原始干扰水位', '定点化 FKF 滤波水位'],
-                            textStyle: { color: '#b3d4ff' },
-                            top: 0
+                            textStyle: { color: '#7dd3fc' },
+                            top: 10
                         },
                         grid: {
-                            left: '5%',
+                            left: '3%',
                             right: '5%',
-                            bottom: '5%',
-                            top: '15%',
+                            bottom: '3%',
+                            top: '20%',
                             containLabel: true
                         },
                         xAxis: {
@@ -559,21 +694,21 @@
                             boundaryGap: false,
                             data: timeData,
                             axisLabel: { color: '#7a9ec9' },
-                            axisLine: { lineStyle: { color: '#005a9e' } }
+                            axisLine: { lineStyle: { color: 'rgba(0, 90, 158, 0.8)' } }
                         },
                         yAxis: {
                             type: 'value',
                             min: 0,
                             max: 45,
                             axisLabel: { color: '#7a9ec9' },
-                            splitLine: { lineStyle: { color: '#05234b', type: 'dashed' } }
+                            splitLine: { lineStyle: { color: 'rgba(0, 90, 158, 0.3)', type: 'dashed' } }
                         },
                         series: [{
                             name: '原始干扰水位',
                             type: 'line',
                             data: rawSeries,
-                            itemStyle: { color: '#ff3333' },
-                            lineStyle: { width: 1, opacity: 0.5 },
+                            itemStyle: { color: '#ff4757' },
+                            lineStyle: { width: 1.5, opacity: 0.6 },
                             symbol: 'none'
                         }, {
                             name: '定点化 FKF 滤波水位',
@@ -625,8 +760,7 @@
                     }
 
                     scene = new THREE.Scene();
-                    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight,
-                        0.1, 1000);
+                    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
                     camera.position.set(15, 12, 20);
                     camera.lookAt(0, 0, 0);
 
@@ -639,7 +773,7 @@
                         color: 0x005a9e,
                         wireframe: true,
                         transparent: true,
-                        opacity: 0.5
+                        opacity: 0.3
                     });
                     const garage = new THREE.Mesh(garageGeo, garageMat);
                     scene.add(garage);
@@ -649,20 +783,22 @@
                     const waterMat = new THREE.MeshPhysicalMaterial({
                         color: 0x00eaff,
                         transparent: true,
-                        opacity: 0.6,
-                        transmission: 0.5,
-                        roughness: 0.1
+                        opacity: 0.7,
+                        transmission: 0.6,
+                        roughness: 0.2
                     });
                     waterMesh = new THREE.Mesh(waterGeo, waterMat);
                     waterMesh.position.y = -5;
                     waterMesh.scale.y = 0.001;
                     scene.add(waterMesh);
 
-                    const gridHelper = new THREE.GridHelper(10, 10, 0x005a9e, 0x002244);
+                    const gridHelper = new THREE.GridHelper(10, 10, 0x00eaff, 0x005a9e);
                     gridHelper.position.y = -5;
+                    gridHelper.material.opacity = 0.2;
+                    gridHelper.material.transparent = true;
                     scene.add(gridHelper);
 
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
                     scene.add(ambientLight);
                     const dirLight = new THREE.DirectionalLight(0xffffff, 1);
                     dirLight.position.set(10, 20, 10);
@@ -671,7 +807,7 @@
                     const animate = () => {
                         requestAnimationFrame(animate);
                         if (scene && camera && renderer) {
-                            scene.rotation.y += 0.003;
+                            scene.rotation.y += 0.002;
                             renderer.render(scene, camera);
                         }
                     };
@@ -686,14 +822,13 @@
                     const smoothAnimation = () => {
                         const diff = targetScale - waterMesh.scale.y;
                         if (Math.abs(diff) > 0.001) {
-                            waterMesh.scale.y += diff * 0.006;
+                            waterMesh.scale.y += diff * 0.08;
                             requestAnimationFrame(smoothAnimation);
                         }
                     };
                     smoothAnimation();
                 };
 
-                // 获取实时传感器数据（核心大屏）
                 const fetchBackendData = async () => {
                     try {
                         const response = await fetch('https://flood-backend-kd0w.onrender.com/api/water/latest');
@@ -714,7 +849,6 @@
                                 predictMsg.value = data.predict_warning || "无预警信息";
                                 isWarning.value = data.warning_flag || false;
 
-                                // 接收系统启动基准时间（用于动态显示运行时长）
                                 if (data.system_start_time && !systemStartTime) {
                                     systemStartTime = new Date(data.system_start_time);
                                 }
